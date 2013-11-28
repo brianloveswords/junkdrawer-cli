@@ -1,0 +1,110 @@
+#!/usr/bin/env node
+
+// ways to use this shit:
+//   junkdrawer mv YA-BRO.gif ya-bro.jpg
+//   junkdrawer rm ya.gif
+//   junkdrawer ls
+//   junkdrawer some-file.gif < some-file.gif
+//   junkdrawer file.gif > file.gif
+
+const fs = require('fs')
+const url = require('url')
+const http = require('http')
+const xtend = require('xtend')
+const path = require('path')
+
+function moveFile() {console.log('not implemented')}
+function listFile() {console.log('not implemented')}
+
+function deleteFile(urlParts, argv) {
+  const method = 'DELETE'
+  const filename = argv[3]
+
+  if (!filename)
+    throw new Error('must pass a filename')
+
+  const remotePath = path.join('/', filename)
+  const options = xtend(urlParts, {
+    path: path.join('/', filename),
+    method: method
+  })
+
+  const request =
+    http.request(options, function (res) {
+      if (res.statusCode == 404) {
+        console.error('File Not Found')
+      } else {
+        console.log('DELETED: %s/%s', host, filename)
+      }
+      res.destroy()
+    }).end()
+}
+
+function streamFile(urlParts, argv) {
+  const filename = argv[2]
+
+  if (!filename)
+    throw new Error('must pass a filename')
+
+  process.stdin.once('readable', function () {
+    const chunk = process.stdin.read()
+    const method = chunk ? 'POST' : 'GET'
+
+    const remotePath = path.join('/', filename)
+    const options = xtend(urlParts, {
+      path: remotePath,
+      method: method
+    })
+
+    const request =
+      http.request(options, function (res) {
+        if (res.statusCode == 404) {
+          console.error('File Not Found')
+          process.stdin.destroy()
+          return res.destroy()
+        }
+        if (method == 'GET') {
+          process.stdin.destroy()
+          return res.pipe(process.stdout)
+        } else res.destroy()
+      })
+
+    if (method == 'POST') {
+      request.write(chunk)
+      request.pipe(process.stdin)
+    } else request.end()
+
+  })
+
+}
+
+const config = path.join(process.env.HOME, '.junkdrawer')
+const host = fs.readFileSync(config).toString('utf8').trim()
+const parts = url.parse(host)
+
+const argv = process.argv
+
+const cmds = {
+  mv: moveFile,
+  rm: deleteFile,
+  ls: listFile,
+  default: streamFile,
+}
+
+const cmd = cmds[argv[2]] || cmds.default
+
+cmd(parts, argv)
+
+// const options = xtend(parts, {
+//   path: path.join('/', filename),
+//   method: method
+// })
+
+// const request =
+//   http.request(options, function (res) {
+//     console.error(res.statusCode)
+//     console.log(host + path.join('/', filename))
+//     res.destroy()
+//   })
+
+// process.stdin.pipe(request)
