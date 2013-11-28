@@ -71,11 +71,9 @@ function streamFile(urlParts, argv) {
 
     if (method == 'POST') {
       request.write(chunk)
-      request.pipe(process.stdin)
+      process.stdin.pipe(request)
     } else request.end()
-
   })
-
 }
 
 const config = path.join(process.env.HOME, '.junkdrawer')
