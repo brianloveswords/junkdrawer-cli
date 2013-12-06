@@ -84,23 +84,12 @@ const cmds = {
   mv: moveFile,
   rm: deleteFile,
   ls: listFile,
-  default: printUsage,
+  default: streamFile,
 }
 
-const cmd = cmds[argv[2]] || cmds.default
-
-cmd(parts, argv)
-
-// const options = xtend(parts, {
-//   path: path.join('/', filename),
-//   method: method
-// })
-
-// const request =
-//   http.request(options, function (res) {
-//     console.error(res.statusCode)
-//     console.log(host + path.join('/', filename))
-//     res.destroy()
-//   })
-
-// process.stdin.pipe(request)
+!function main() {
+  if (!argv[2])
+    return printUsage()
+  const cmd = cmds[argv[2]] || cmds.default
+  cmd(parts, argv)
+}()
