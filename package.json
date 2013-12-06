@@ -4,7 +4,7 @@
   "description": "CLI for any junkdrawer server",
   "main": "index.js",
   "bin": {
-    "hyperproxy": "./bin/junkdrawer"
+    "junkdrawer": "./bin/junkdrawer"
   },
   "directories": {
     "test": "test"
