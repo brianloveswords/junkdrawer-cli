@@ -1,0 +1,35 @@
+{
+  "name": "junkdrawer-cli",
+  "version": "0.0.0",
+  "description": "CLI for any junkdrawer server",
+  "main": "index.js",
+  "bin": {
+    "hyperproxy": "./bin/junkdrawer"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "xtend": "~2.1.1",
+    "optimist": "~0.6.0"
+  },
+  "devDependencies": {
+    "tap": "~0.4.6"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brianloveswords/junkdrawer-cli.git"
+  },
+  "keywords": [
+    "junkdrawer",
+    "cli"
+  ],
+  "author": "Brian J Brennan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brianloveswords/junkdrawer-cli/issues"
+  }
+}

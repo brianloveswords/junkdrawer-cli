@@ -1,0 +1,7 @@
+Usage:
+
+    junkdrawer mv YA-BRO.gif ya-bro.jpg
+    junkdrawer rm ya.gif
+    junkdrawer ls
+    junkdrawer some-file.gif < some-file.gif
+    junkdrawer file.gif > file.gif

@@ -1,12 +1,5 @@
 #!/usr/bin/env node
 
-// ways to use this shit:
-//   junkdrawer mv YA-BRO.gif ya-bro.jpg
-//   junkdrawer rm ya.gif
-//   junkdrawer ls
-//   junkdrawer some-file.gif < some-file.gif
-//   junkdrawer file.gif > file.gif
-
 const fs = require('fs')
 const url = require('url')
 const http = require('http')
@@ -76,6 +69,11 @@ function streamFile(urlParts, argv) {
   })
 }
 
+function printUsage() {
+  fs.createReadStream(path.join(__dirname, 'usage.txt'))
+    .pipe(process.stderr)
+}
+
 const config = path.join(process.env.HOME, '.junkdrawer')
 const host = fs.readFileSync(config).toString('utf8').trim()
 const parts = url.parse(host)
@@ -86,7 +84,7 @@ const cmds = {
   mv: moveFile,
   rm: deleteFile,
   ls: listFile,
-  default: streamFile,
+  default: printUsage,
 }
 
 const cmd = cmds[argv[2]] || cmds.default
