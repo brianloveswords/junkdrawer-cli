@@ -48,7 +48,7 @@ function streamFile(urlParts, argv) {
       path: remotePath,
       method: method
     })
-
+    const fullPath = url.format(urlParts) + filename
     const request =
       http.request(options, function (res) {
         if (res.statusCode == 404) {
@@ -65,6 +65,9 @@ function streamFile(urlParts, argv) {
     if (method == 'POST') {
       request.write(chunk)
       process.stdin.pipe(request)
+        .on('finish', function () {
+          console.log(fullPath)
+        })
     } else request.end()
   })
 }
